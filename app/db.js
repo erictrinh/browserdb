@@ -45,12 +45,14 @@ var removeStores = function(db, schema) {
   });
 };
 
-module.exports = function(dbName, schema) {
+module.exports = function(dbName, dbVersion, schema) {
   var db;
 
   var connect = function() {
     var deferred = _.Deferred(),
-      openRequest = indexedDB.open(dbName, Date.now());
+      // every time this is called,
+      // a new number bigger than the last is generated
+      openRequest = indexedDB.open(dbName, dbVersion);
 
     // this gets run every time we open a connection
     openRequest.onupgradeneeded = function(e) {

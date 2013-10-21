@@ -1,7 +1,7 @@
 var DB = require('../app/db.js');
 
 describe('DB', function() {
-  var db = new DB('test', {
+  var db = new DB('test', 1, {
     books: {
       index: {
         barcode: ['unique'],
