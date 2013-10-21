@@ -13,7 +13,9 @@ module.exports = function(config) {
 
     preprocessors: {'test/**/*.js': ['browserify']},
 
-    browserify: {},
+    browserify: {
+      watch: true
+    },
 
     // list of files / patterns to load in the browser
     files: [
