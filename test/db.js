@@ -1,4 +1,3 @@
-var _ = require('underscore');
 var DB = require('../app/db.js');
 
 describe('DB', function() {
