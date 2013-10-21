@@ -1,6 +1,8 @@
 var _ = require('underscore');
 _.mixin(require('underscore.deferred'));
 
+var isMatch = require('./ismatch.js');
+
 module.exports = function(objectStoreName) {
   var objectStore = function(db) {
     var transaction = db.transaction([objectStoreName], 'readwrite');
@@ -54,56 +56,6 @@ module.exports = function(objectStoreName) {
       return deferred.promise();
     });
 
-  };
-
-  var isMatch = function(query, object) {
-    if (!_.isObject(query)) {
-      throw new Error('query must be an object');
-    }
-
-    if (_.isEmpty(object)) {
-      return true;
-    }
-
-    return _.every(_.pairs(query), function(prop) {
-      var key = prop[0],
-        value = prop[1];
-
-      if (_.isRegExp(value)) {
-        return value.test(object[key]);
-      }
-
-      if (_.isArray(value)) {
-        throw new Error('query cannot be an array');
-      }
-
-      if (_.isFunction(value)) {
-        return value.call(this, object[key]);
-      }
-
-      if (_.isObject(value)) {
-        var specials = {
-          '$gt': function(a, b) { return a > b; },
-          '$gte': function(a, b) { return a >= b; },
-          '$lt': function(a, b) { return a < b; },
-          '$lte': function(a, b) { return a <= b; }
-        };
-
-        return _.every(_.keys(specials), function(specialKey) {
-          if (_.has(value, specialKey)) {
-            return specials[specialKey](object[key], value[specialKey]);
-          } else {
-            return true;
-          }
-        });
-      }
-
-      if (_.isArray(object[key])) {
-        return _.contains(object[key], value);
-      }
-
-      return object[key] === value;
-    });
   };
 
   var constructBounds = function(query, index) {
