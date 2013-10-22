@@ -21,7 +21,12 @@ var addStores = function(db, schema) {
       autoIncrement: true
     });
 
-    _.each(storeSchema.index, function(keys, index) {
+    createIndexes(storeSchema.index, objStore);
+
+  });
+
+  function createIndexes(schemaIndex, objStore) {
+    _.each(schemaIndex, function(keys, index) {
       var attrs = _.object(_.map(keys, function(key) {
         if (key === 'array') {
           return ['multiEntry', true];
@@ -32,8 +37,7 @@ var addStores = function(db, schema) {
 
       objStore.createIndex(index, index, attrs);
     });
-
-  });
+  }
 };
 
 var removeStores = function(db, schema) {
