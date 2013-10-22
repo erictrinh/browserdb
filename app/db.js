@@ -63,13 +63,32 @@ module.exports = function(dbName, dbVersion, schema) {
 
     openRequest.onsuccess = function(e) {
       db = e.target.result;
+
+      db.onversionchange = function(event) {
+        db.close();
+      };
       deferred.resolve(db);
     };
 
     openRequest.onerror = function(e) {
+      console.log(e.target.error);
       //Do something for the error
-      deferred.reject(e);
+      deferred.reject(new Error('could not connect db'));
     };
+
+    return deferred.promise();
+  };
+
+  var close = function() {
+    var deferred = _.Deferred();
+
+    if (db && _.isFunction(db.close)) {
+      db.close();
+    }
+
+    _.defer(function() {
+      deferred.resolve();
+    });
 
     return deferred.promise();
   };
@@ -82,6 +101,7 @@ module.exports = function(dbName, dbVersion, schema) {
 
   return {
     connect: connect,
+    close: close,
     store: store,
     stores: listStores
   };
