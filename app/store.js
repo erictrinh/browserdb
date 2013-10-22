@@ -17,8 +17,7 @@ module.exports = function(objectStoreName) {
 
       var store = objectStore(db);
 
-      //Perform the add
-      var request = store.add(record);
+      var request = store.put(record);
 
       request.onerror = function(e) {
         //some type of error handler
