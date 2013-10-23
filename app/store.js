@@ -96,6 +96,20 @@ module.exports = function(objectStoreName) {
     return IDBKeyRange.only(query[index]);
   };
 
+  // insert one or multiple records
+  var insert = function(records) {
+    if (_.isArray(records)) {
+      var adds = _.map(records, function(record) {
+        return addRecord(record);
+      });
+
+      return _.when(adds);
+    }
+
+    // this is a single record
+    return addRecord(records);
+  };
+
   var find = function(query, options) {
     var defaults = {
       index: null,
@@ -190,7 +204,7 @@ module.exports = function(objectStoreName) {
   };
 
   return {
-    insert: addRecord,
+    insert: insert,
     find: find,
     findOne: findOne,
     update: update
