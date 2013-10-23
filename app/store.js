@@ -11,7 +11,6 @@ module.exports = function(objectStoreName) {
   };
 
   var addRecord = function(record) {
-
     return connected.then(function(db) {
       var deferred = _.Deferred();
 
@@ -30,11 +29,9 @@ module.exports = function(objectStoreName) {
 
       return deferred.promise();
     });
-
   };
 
   var replaceRecord = function(primaryKey, record) {
-
     return connected.then(function(db) {
       var deferred = _.Deferred();
 
@@ -54,7 +51,6 @@ module.exports = function(objectStoreName) {
 
       return deferred.promise();
     });
-
   };
 
   var constructBounds = function(query, index) {

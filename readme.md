@@ -1,6 +1,6 @@
 # BrowserDB
 
-BrowserDB is a saner API for indexedDB. It abstracts the tedious details of transactions and DB schema changes so that you can be more productive using indexedDB. BrowserDB uses promises for async flow control.
+BrowserDB is a saner, promise-based API for indexedDB. It abstracts the tedious details of transactions and DB schema migrations so that you can be more productive using indexedDB.
 
 One of the goals of BrowserDB is also to supplement indexedDB's relatively weak querying abilities. BrowserDB uses a Mongo-inspired querying syntax that makes queries concise yet powerful.
 
@@ -38,8 +38,19 @@ Now you can query the store:
       console.log(results);
     });
 
-`store.find()` actually returns a promise, so you have to attach `.then` or `.done` to use the results.
+`store.find()` actually returns a promise, so we have to use `.then` or `.done` to use the results.
 
 ## Querying in depth
 
-More later...
+Queries in BrowserDB are similar to queries in MongoDB. Queries take the form of Javascript objects, where the query object must be a subset of a record in the database for the database record to be returned. Let's look at an example.
+
+    store.find({ author: 'Reginald Braithwaite' });
+
+This query will return all books by Reginald Braithwaite stored in our object store. We can be even more specific:
+
+    store.find({
+      author: 'Reginald Braithwaite',
+      title: 'Javascript Allonge'
+    });
+
+This will return all books by Reg AND that have the title 'Javascript Allonge'. Query values can also be regular expressions, arrays, or functions.
