@@ -1,5 +1,5 @@
-var _ = require('underscore');
-_.mixin(require('underscore.deferred'));
+'use strict';
+/* global _ */
 
 var addStores = function(db, schema) {
   // set up schema for db
@@ -68,7 +68,7 @@ module.exports = function(dbName, dbVersion, schema) {
     openRequest.onsuccess = function(e) {
       db = e.target.result;
 
-      db.onversionchange = function(event) {
+      db.onversionchange = function() {
         db.close();
       };
       deferred.resolve(db);

@@ -1,4 +1,5 @@
-var _ = require('underscore');
+'use strict';
+/* global _ */
 
 module.exports = function(query, record) {
   if (!_.isObject(query)) {
