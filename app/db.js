@@ -1,5 +1,5 @@
 'use strict';
-/* global _ */
+/* global _, indexedDB */
 
 var addStores = function(db, schema) {
   // set up schema for db
@@ -54,16 +54,19 @@ module.exports = function(dbName, dbVersion, schema) {
 
   var connect = function() {
     var deferred = _.Deferred(),
-      // every time this is called,
-      // a new number bigger than the last is generated
+      openRequest;
+
+    if (dbVersion && schema) {
       openRequest = indexedDB.open(dbName, dbVersion);
 
-    // this gets run every time we open a connection
-    openRequest.onupgradeneeded = function(e) {
-      db = e.target.result;
-      addStores(db, schema);
-      removeStores(db, schema);
-    };
+      openRequest.onupgradeneeded = function(e) {
+        db = e.target.result;
+        addStores(db, schema);
+        removeStores(db, schema);
+      };
+    } else {
+      openRequest = indexedDB.open(dbName);
+    }
 
     openRequest.onsuccess = function(e) {
       db = e.target.result;
@@ -71,6 +74,7 @@ module.exports = function(dbName, dbVersion, schema) {
       db.onversionchange = function() {
         db.close();
       };
+
       deferred.resolve(db);
     };
 
@@ -97,7 +101,9 @@ module.exports = function(dbName, dbVersion, schema) {
     return deferred.promise();
   };
 
-  var store = require('./store.js');
+  var connected = connect();
+
+  var store = require('./store.js').bind(this, connected);
 
   var listStores = function() {
     return _.toArray(db.objectStoreNames);

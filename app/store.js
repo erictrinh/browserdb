@@ -4,7 +4,7 @@
 var isMatch = require('./ismatch.js');
 var constructBounds = require('./bounds.js');
 
-module.exports = function(objectStoreName) {
+module.exports = function(connected, objectStoreName) {
   var objectStore = function(db) {
     var transaction = db.transaction([objectStoreName], 'readwrite');
     var store = transaction.objectStore(objectStoreName);
