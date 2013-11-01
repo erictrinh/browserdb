@@ -14,7 +14,7 @@ var addStores = function(db, schema) {
     if (storeSchema.key) {
       auto = { keyPath: storeSchema.key };
     } else {
-      auto = { keyPath: '_id', autoIncrement: true };
+      auto = { autoIncrement: true };
     }
 
     var objStore = db.createObjectStore(storeName, {
@@ -49,7 +49,7 @@ var removeStores = function(db, schema) {
   });
 };
 
-module.exports = function(dbName, dbVersion, schema) {
+module.exports = window.DB = function(dbName, dbVersion, schema) {
   var db;
 
   var connect = function() {
