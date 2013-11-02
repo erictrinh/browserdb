@@ -1,11 +1,15 @@
+'use strict';
+/* global _ */
+
 // some utility functions
 // times an async operation returning a promise
 exports.time = function(promise) {
   var now = Date.now();
 
-  promise.then(function() {
+  promise.then(function(records) {
     var diff = Date.now() - now;
-    console.log('That took ' + diff + ' ms');
+    console.log('That took ' + diff +
+      ' ms and returned ' + records.length + ' records');
   });
 
   return promise;
