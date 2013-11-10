@@ -27,13 +27,28 @@ var addStores = function(db, schema) {
 
   function createIndexes(schemaIndex, objStore) {
     _.each(schemaIndex, function(keys, index) {
-      var attrs = _.object(_.map(keys, function(key) {
-        if (key === 'array') {
-          return ['multiEntry', true];
-        }
+      var attrs;
+      // keys should be an array of properties pertaining
+      // to each index
 
-        return [key, true];
-      }));
+      // could also just be true if doesn't have properties
+      if (_.isBoolean(keys)) {
+        if (keys) {
+          // default attrs
+          attrs = { unique: false, multiEntry: false };
+        } else {
+          // don't create indexes if false
+          return;
+        }
+      } else {
+        attrs = _.object(_.map(keys, function(key) {
+          if (key === 'array') {
+            return ['multiEntry', true];
+          }
+
+          return [key, true];
+        }));
+      }
 
       objStore.createIndex(index, index, attrs);
     });
